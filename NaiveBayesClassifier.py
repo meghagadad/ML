@@ -122,13 +122,14 @@ def max_prob(filename):
     else:
         print('You are extremely unlucky! The probabilities were exactly the same! '
               'Positive probability:',positive, 'Negative Probability:',negative)
+        return 0
     if not (positive == negative):
         if test_accuracy(filename, decision) == True:
             print("The prediction was correct!"+"\n")
-            return True
+            return 1
         elif test_accuracy(filename, decision) == False:
             print("The prediction was wrong!"+"\n")
-            return False
+            return -1
 
 #  This function tests if the class-prediction assigned corresponds to the actual class of the review.
 #  It does so my comparing the prediction to the numbers at the end of the text files.
@@ -154,9 +155,10 @@ def test_all_reviews():
         try:
             if filename.endswith(".txt"):
                     print("Now scanning:", filename)
-                    if max_prob(filename):
+                    result = max_prob(filename)
+                    if result == 1:
                         right += 1
-                    else:
+                    elif result == -1:
                         wrong += 1
                     print("So far", right+wrong, "reviews have been scanned.")
                     print("Accuracy so far:",(int((right/(right + wrong))*100)),"percent.")
