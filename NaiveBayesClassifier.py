@@ -146,10 +146,10 @@ def test_accuracy(filename, decision):
 # This function tests all reviews in the test folder.
 # It also keeps track of how many predictions were correct,and finds the overall accuracy percentage.
 
-
 def test_all_reviews():
     right = 0
     wrong = 0
+    accuracy = (int((right/(right + wrong))*100))
     for filename in os.listdir('test/'):
         try:
             if filename.endswith(".txt"):
@@ -158,12 +158,13 @@ def test_all_reviews():
                         right += 1
                     else:
                         wrong += 1
-
+                    print("So far", right+wrong, "reviews have been scanned.")
+                    print("Accuracy so far:",accuracy,"percent.")
         except Exception as e:
             raise e
             print("No files found!")
     print('In total', right+wrong, 'reviews were tested')
-    print("Accuracy:", (int((right/(right + wrong))*100)),'percent.')
+    print("Accuracy:", accuracy,'percent.')
 
 
 # CODE TESTING AREA
@@ -181,7 +182,6 @@ print("\n")
 # print("The word awful appears", word_frequency("awful", "positive"), "times in positive reviews")
 # print("The word awful appears", word_frequency("awful", "negative"), "times in negative reviews")
 test_all_reviews()
-
 
 
 
