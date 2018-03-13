@@ -9,15 +9,20 @@ positiveWords = []
 stopWords = ['is', 'a', 'of', 'the', 'it', 'and', 'for', 'with', 'be', 'in',
              'this', 'an', 'to', 'has', 'that', 'she', 'he', 'it', 'i', 'was',
              'as', 'are', 'on', 'his', 'her', 'at', 'have']
-global combinedWords
-global UniqueWords
-global PositiveAmount
-global NegativeAmount
+
+# The following variables are used to calculate the probability of a review being of a certain class.
+# These field are initialized in the initialize() function.
+
+global combinedWords # The total amount of words in all scanned reviews.
+global UniqueWords # The total amount of UNIQUE words in all scanned reviews.
+global PositiveAmount # The amount of positive reviews processed.
+global NegativeAmount # The amount of negative reviews processed.
 global PProb  # The probability that the class is POSITIVE
 global NProb  # The probability that the class is NEGATIVE
 
 
-#  The function below collects all words of the parameter type POSITIVE or NEGATIVE and puts them into a list.
+#  The function below collects all words of the parameter type POSITIVE or NEGATIVE
+#  and puts them into a list depending on the class.
 
 def collect_words(type):
     if type == "positive":
@@ -65,7 +70,6 @@ def initialize():
 
 #  This function prints a list of top word frequencies of the parameter list.
 #  We probably do not need this function.
-            #
 
             # def all_word_frequency(listOfWords, top):
             #     listOfWords = Counter(listOfWords)
@@ -99,8 +103,8 @@ def class_probabilities(filename, type):
         for line in file:
             for word in line.split():
                 if word.lower() not in stopWords:
-                    result *= (word_frequency(word, type) + 1) / math.log((amount + UniqueWords))
-    return result * ClassProb
+                    result *= math.log((word_frequency(word, type) + 1) / ((amount + UniqueWords)))
+    return result * math.log(ClassProb)
 
 
 # This function assigns a class to a review based on the greatest of the two probabilities: positive and negative.
@@ -108,46 +112,75 @@ def class_probabilities(filename, type):
 def max_prob(filename):
     positive = class_probabilities(filename,"positive")
     negative = class_probabilities(filename,"negative")
+    decision = ""
     if positive > negative:
-        print('The review is POSITIVE. The probability was:', positive)
+        print('This review is POSITIVE. The probability was:', positive)
+        decision = "positive"
     elif positive < negative:
-        print('The review is NEGATIVE. The probability was:', negative)
+        print('This review is NEGATIVE. The probability was:', negative)
+        decision = "negative"
     else:
-        print('You are extremely unlucky! The probabilities were exactly the same!')
+        print('You are extremely unlucky! The probabilities were exactly the same! '
+              'Positive probability:',positive, 'Negative Probability:',negative)
+    if test_accuracy(filename, decision):
+        print("The prediction was correct!"+"\n")
+        return True
+    else:
+        print("The prediction was wrong!"+"\n")
+        return False
+
+#  This function tests if the class-prediction assigned corresponds to the actual class of the review.
+#  It does so my comparing the prediction to the numbers at the end of the text files.
+
+
+def test_accuracy(filename, decision):
+    if ((filename.endswith("_10.txt") or filename.endswith("_9.txt")
+         or filename.endswith("_8.txt") or filename.endswith("_7.txt")) and (decision == "positive")):
+        return True
+    elif ((filename.endswith("_1.txt") or filename.endswith("_2.txt")
+           or filename.endswith("_3.txt") or filename.endswith("_4.txt")) and (decision == "negative")):
+        return True
+    else: return False
 
 
 # This function tests all reviews in the test folder.
+# It also keeps track of how many predictions were correct,and finds the overall accuracy percentage.
+
 
 def test_all_reviews():
-    counter = 0
+    right = 0
+    wrong = 0
     for filename in os.listdir('test/'):
         try:
             if filename.endswith(".txt"):
-                    counter += 1
-                    max_prob(filename)
+                    print("Now scanning:", filename)
+                    if max_prob(filename):
+                        right += 1
+                    else:
+                        wrong += 1
+
         except Exception as e:
             raise e
             print("No files found!")
-    print('In total', counter, 'reviews were tested')
+    print('In total', right+wrong, 'reviews were tested')
+    print("Accuracy:", (int((right/(right + wrong))*100)),'percent.')
 
 
-#
-#  CODE TESTING AREA
-#
+# CODE TESTING AREA
 
+print("\n")
 collect_words('positive')
 collect_words('negative')
 initialize()
-print("Total number of positive words:", PositiveAmount)
-print("Total number of negative words:", NegativeAmount)
-print("Total number of UNIQUE words:", UniqueWords)
-print("Probability of class Positive:", PProb)
-print("Probability of class Negative:", NProb)
-print("The word awful appears", word_frequency("awful", "positive"), "times in positive reviews")
-print("The word awful appears", word_frequency("awful", "negative"), "times in negative reviews")
-max_prob("0_10.txt")
-# test_all_reviews()
-
+print("\n")
+# print("Total number of positive words:", PositiveAmount)
+# print("Total number of negative words:", NegativeAmount)
+# print("Total number of UNIQUE words:", UniqueWords)
+# print("Probability of class Positive:", PProb)
+# print("Probability of class Negative:", NProb)
+# print("The word awful appears", word_frequency("awful", "positive"), "times in positive reviews")
+# print("The word awful appears", word_frequency("awful", "negative"), "times in negative reviews")
+test_all_reviews()
 
 
 
