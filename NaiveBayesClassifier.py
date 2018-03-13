@@ -122,12 +122,13 @@ def max_prob(filename):
     else:
         print('You are extremely unlucky! The probabilities were exactly the same! '
               'Positive probability:',positive, 'Negative Probability:',negative)
-    if test_accuracy(filename, decision):
-        print("The prediction was correct!"+"\n")
-        return True
-    else:
-        print("The prediction was wrong!"+"\n")
-        return False
+    if not (positive == negative):
+        if test_accuracy(filename, decision) == True:
+            print("The prediction was correct!"+"\n")
+            return True
+        elif test_accuracy(filename, decision) == False:
+            print("The prediction was wrong!"+"\n")
+            return False
 
 #  This function tests if the class-prediction assigned corresponds to the actual class of the review.
 #  It does so my comparing the prediction to the numbers at the end of the text files.
@@ -149,7 +150,6 @@ def test_accuracy(filename, decision):
 def test_all_reviews():
     right = 0
     wrong = 0
-    accuracy = (int((right/(right + wrong))*100))
     for filename in os.listdir('test/'):
         try:
             if filename.endswith(".txt"):
@@ -159,12 +159,15 @@ def test_all_reviews():
                     else:
                         wrong += 1
                     print("So far", right+wrong, "reviews have been scanned.")
-                    print("Accuracy so far:",accuracy,"percent.")
+                    print("Accuracy so far:",(int((right/(right + wrong))*100)),"percent.")
+                    print("\n")
         except Exception as e:
             raise e
             print("No files found!")
     print('In total', right+wrong, 'reviews were tested')
-    print("Accuracy:", accuracy,'percent.')
+    print(right, "of them were predicted correctly.")
+    print(wrong, "of them were predicted incorrectly.")
+    print("Accuracy:", (int((right/(right + wrong))*100)),'percent.')
 
 
 # CODE TESTING AREA
