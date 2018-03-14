@@ -175,7 +175,7 @@ def test_all_reviews():
             raise e
             print("No files found!")
     print(right + wrong + discarded, "reviews were scanned in total.")
-    print("Of these", discarded, "reviews were discarded because of the class probabilities were inf or 0.0")
+    print("Of these,", discarded, "reviews were discarded because of class probabilities were inf or 0.0")
     print('This means', right+wrong, 'reviews were actually tested')
     print(right, "of them were predicted correctly.")
     print(wrong, "of them were predicted incorrectly.")
