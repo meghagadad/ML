@@ -20,12 +20,12 @@ from sklearn.metrics import mean_squared_error, r2_score
 #os.getcwd()
 #wheatData = load_files("C:\\Users\\hkujawska\\Documents\\priv\\UIBMachineLearning\\AS2\\seeds_dataset.txt")
 
-in_file = "seeds_dataset.csv"
+in_file = "Dataset.txt"
 def load_dataset(in_file):
     colnames = [ 'area A', 'perimeter P', 'compactness C = 4*pi*A/P^2','length of kernel','width of kernel','asymmetry coefficient', 'length of kernel groove', 'class']
     wheatData = pd.read_csv(in_file,sep='\t', names = colnames);
     # 1. print dimensions
-    [col,row] = wheatData.shape
+    [row,col] = wheatData.shape
     print('Dataset has {0} columns and {1} rows'.format(col, row))
     # 2. print top 5 lines
     print(wheatData.head(5))
@@ -56,7 +56,7 @@ def load_dataset(in_file):
     
 
     # number of components (elements)
-    elementsRange =  col;
+    elementsRange =  len(XtrainSet);
    
     wheat=[]
     #types of Gaussian Mixture Models 
@@ -67,7 +67,7 @@ def load_dataset(in_file):
              gmm = GaussianMixture(n_components=elementsRange,
                                       covariance_type=cv_type)
              gmm.fit(XtrainSet)
-             wheat.append(gmm.wheat(X))
+             wheat.append(gmm.bic(XtrainSet))
              
              # make prediction using the testing sets
              Ypred = gmm.predict(XtestSet)
