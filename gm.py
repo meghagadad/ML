@@ -46,8 +46,8 @@ def plot_results(X, Y_, means, covariances, index, title):
         ell.set_alpha(0.5)
         splot.add_artist(ell)
 
-    plt.xlim(10., 22.)
-    plt.ylim(4., 7.)
+    plt.xlim(min(dF[:, featureA]), max(dF[:, featureA]))
+    plt.ylim(min(dF[:, featureB]), max(dF[:, featureB]))
     plt.xticks(())
     plt.yticks(())
     plt.title(title)
@@ -106,36 +106,42 @@ n_classes = 3
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='full').fit(X)
 # Plot the test data with crosses
 colors = ['navy', 'turquoise', 'darkorange']
+plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 0,
+             'Gaussian Mixture full')
 for n, color in enumerate(colors):
     data = X[Y == n+1]
     plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
-plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 0,
-             'Gaussian Mixture full')
+
 
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='spherical').fit(X)
+#draw clusters
+plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 1,
+             'Gaussian Mixture spherical')
 #draw samples
 for n, color in enumerate(colors):
     data = X[Y == n+1]
     plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
-#draw clusters
-plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 1,
-             'Gaussian Mixture spherical')
+
 
 
     
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='diag').fit(X)
+
+plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 2,
+             'Gaussian Mixture diag')
 for n, color in enumerate(colors):
     data = X[Y == n+1]
-    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
-plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 2,
-             'Gaussian Mixture diag')    
+    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)    
 
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='tied').fit(X)
+plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 3,
+             'Gaussian Mixture tied')
 for n, color in enumerate(colors):
     data = X[Y == n+1]
     plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
-plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 3,
-             'Gaussian Mixture tied')
+
+
+
 
 # Fit a Dirichlet process Gaussian mixture using five components
 #dpgmm = mixture.BayesianGaussianMixture(n_components=n_classes,
