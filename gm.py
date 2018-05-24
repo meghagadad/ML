@@ -27,7 +27,7 @@ def plot_results(X, Y_, means, covariances, index, title):
         elif gmm.covariance_type == 'spherical':
             covariances = np.eye(gmm.means_.shape[1]) * gmm.covariances_[i]
         v, w = np.linalg.eigh(covariances)
-        print('covar',covar)
+
 #        v, w = linalg.eigh(covar)
         v = 2. * np.sqrt(2.) * np.sqrt(v)
         u = w[0] / linalg.norm(w[0])
@@ -65,7 +65,9 @@ wheatData = pd.read_csv(in_file, sep='\t', names=colnames);
 dF = wheatData.values
 featureA = 0
 featureB = 3
+target = 7
 data = dF[:, [featureA, featureB]]
+Y = dF[:, target]
 [row, col] = data.shape
 # Generate random sample, two components
 np.random.seed(0)
@@ -102,16 +104,36 @@ n_samples = 100
 # Fit a Gaussian mixture with EM using five components
 n_classes = 3
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='full').fit(X)
+# Plot the test data with crosses
+colors = ['navy', 'turquoise', 'darkorange']
+for n, color in enumerate(colors):
+    data = X[Y == n+1]
+    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
 plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 0,
              'Gaussian Mixture full')
+
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='spherical').fit(X)
+#draw samples
+for n, color in enumerate(colors):
+    data = X[Y == n+1]
+    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
+#draw clusters
 plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 1,
              'Gaussian Mixture spherical')
+
+
+    
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='diag').fit(X)
+for n, color in enumerate(colors):
+    data = X[Y == n+1]
+    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
 plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 2,
-             'Gaussian Mixture diag')
+             'Gaussian Mixture diag')    
 
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='tied').fit(X)
+for n, color in enumerate(colors):
+    data = X[Y == n+1]
+    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
 plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 3,
              'Gaussian Mixture tied')
 
