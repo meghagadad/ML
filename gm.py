@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed May 16 17:18:09 2018
-
 @author: hkujawska
 """
 
@@ -11,81 +10,25 @@ import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import pandas as pd
 
 from sklearn import mixture
 
-color_iter = itertools.cycle(['navy', 'c', 'cornflowerblue', 'gold',
-                              'darkorange'])
-# READ DB
-colnames = ['area A', 'perimeter P', 'compactness C = 4*pi*A/P^2','length of kernel','width of kernel','asymmetry coefficient', 'length of kernel groove', 'class']
-wheatData = pd.read_csv(in_file,sep='\t', names = colnames);
-
-
-# give me to features
-dF = wheatData.values
-featureA = 0
-featureB = 3
-data = dF[:,[featureA,featureB ]]
-[row,col] = data.shape
-# Generate random sample, two components
-np.random.seed(0)
-SampleList=[]
-SampleArray = np.array([])
-for i in range(2):
-    randomRow = np.random.choice(row,1)
-    C =  np.array(dF[int(randomRow),[featureA,featureB ]])
-    SampleArray = np.append(SampleArray, C)
-    np.array(SampleList.append(C))
-    print('C ',C, i , type(C))
-print('SampleList ',SampleList, type(SampleList) )
-
-  
-X = np.array(dF[:,[featureA,featureB ]] )
-print('x', X, type(X))
-#df.drop([randomRow])
-
-print('min',min(dF[:,featureA]))
-print('max',max(dF[:,featureA]))
-print('min',min(dF[:,featureB]))
-print('max',max(dF[:,featureB]))
-# Number of samples per component
-n_samples = 100
-
-# Generate random sample, two components
-##
-#C = np.array([[0., -0.1], [1.7, .4]])
-#print('C ',C, type(C))
-#
-#X = np.r_[np.dot(np.random.randn(n_samples, 2), C),
-#          .7 * np.random.randn(n_samples, 2) + np.array([-6, 3])]
-#print('x', X, type(X))
-
-# Fit a Gaussian mixture with EM using five components
-gmm = mixture.GaussianMixture(n_components=5, covariance_type='full').fit(X)
-plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 0,
-             'Gaussian Mixture')
-
-# Fit a Dirichlet process Gaussian mixture using five components
-dpgmm = mixture.BayesianGaussianMixture(n_components=5,
-                                        covariance_type='full').fit(X)
-plot_results(X, dpgmm.predict(X), dpgmm.means_, dpgmm.covariances_, 1,
-             'Bayesian Gaussian Mixture with a Dirichlet process prior')
-
-plt.show()
-
-
-
-
-
-    
-    
-
-
 def plot_results(X, Y_, means, covariances, index, title):
-    splot = plt.subplot(2, 1, 1 + index)
+    splot = plt.subplot(2, 2, 1 + index)
     for i, (mean, covar, color) in enumerate(zip(
             means, covariances, color_iter)):
-        v, w = linalg.eigh(covar)
+        if gmm.covariance_type == 'full':
+            covariances = gmm.covariances_[i][:2, :2]
+        elif gmm.covariance_type == 'tied':
+            covariances = gmm.covariances_[:2, :2]
+        elif gmm.covariance_type == 'diag':
+            covariances = np.diag(gmm.covariances_[i][:2])
+        elif gmm.covariance_type == 'spherical':
+            covariances = np.eye(gmm.means_.shape[1]) * gmm.covariances_[i]
+        v, w = np.linalg.eigh(covariances)
+        print('covar',covar)
+#        v, w = linalg.eigh(covar)
         v = 2. * np.sqrt(2.) * np.sqrt(v)
         u = w[0] / linalg.norm(w[0])
         # as the DP will not use every component it has access to
@@ -108,3 +51,91 @@ def plot_results(X, Y_, means, covariances, index, title):
     plt.xticks(())
     plt.yticks(())
     plt.title(title)
+
+
+color_iter = itertools.cycle(['navy', 'c', 'cornflowerblue', 'gold',
+                              'darkorange'])
+# READ DB
+in_file = 'Dataset.txt'
+colnames = ['area A', 'perimeter P', 'compactness C = 4*pi*A/P^2', 'length of kernel', 'width of kernel',
+            'asymmetry coefficient', 'length of kernel groove', 'class']
+wheatData = pd.read_csv(in_file, sep='\t', names=colnames);
+
+# give me to features
+dF = wheatData.values
+featureA = 0
+featureB = 3
+data = dF[:, [featureA, featureB]]
+[row, col] = data.shape
+# Generate random sample, two components
+np.random.seed(0)
+SampleList = []
+SampleArray = np.array([])
+for i in range(2):
+    randomRow = np.random.choice(row, 1)
+    C = np.array(dF[int(randomRow), [featureA, featureB]])
+    SampleArray = np.append(SampleArray, C)
+    np.array(SampleList.append(C))
+    print('C ', C, i, type(C))
+print('SampleList ', SampleList, type(SampleList))
+
+X = np.array(dF[:, [featureA, featureB]])
+print('x', X, type(X))
+# df.drop([randomRow])
+
+print('min', min(dF[:, featureA]))
+print('max', max(dF[:, featureA]))
+print('min', min(dF[:, featureB]))
+print('max', max(dF[:, featureB]))
+# Number of samples per component
+n_samples = 100
+
+# Generate random sample, two components
+##
+# C = np.array([[0., -0.1], [1.7, .4]])
+# print('C ',C, type(C))
+#
+# X = np.r_[np.dot(np.random.randn(n_samples, 2), C),
+#          .7 * np.random.randn(n_samples, 2) + np.array([-6, 3])]
+# print('x', X, type(X))
+
+# Fit a Gaussian mixture with EM using five components
+n_classes = 3
+gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='full').fit(X)
+plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 0,
+             'Gaussian Mixture full')
+gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='spherical').fit(X)
+plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 1,
+             'Gaussian Mixture spherical')
+gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='diag').fit(X)
+plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 2,
+             'Gaussian Mixture diag')
+
+gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='tied').fit(X)
+plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 3,
+             'Gaussian Mixture tied')
+
+# Fit a Dirichlet process Gaussian mixture using five components
+#dpgmm = mixture.BayesianGaussianMixture(n_components=n_classes,
+#                                        covariance_type='full').fit(X)
+#
+### Try GMMs using different types of covariances.
+##estimators = dict((cov_type, mixture.GaussianMixture(n_components=n_classes,
+##                   covariance_type=cov_type, max_iter=20, random_state=0))
+##                  for cov_type in ['spherical', 'diag', 'tied', 'full'])
+##
+##n_estimators = len(estimators)
+##
+##plt.figure(figsize=(3 * n_estimators // 2, 6))
+##plt.subplots_adjust(bottom=.01, top=0.95, hspace=.15, wspace=.05,
+##                    left=.01, right=.99)
+#
+#
+#
+#
+#plot_results(X, dpgmm.predict(X), dpgmm.means_, dpgmm.covariances_, 3,
+#             'Bayesian Gaussian Mixture with a Dirichlet process prior')
+
+plt.show()
+
+
