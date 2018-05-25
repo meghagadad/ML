@@ -1,13 +1,8 @@
-from numpy import random, array
-
-
-
-
 
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import scale
-from numpy import random, float
+from numpy import float
 
 
 
@@ -18,14 +13,14 @@ wheatData = pd.read_csv(in_file,sep='\t', names = colnames);
 print('Dataset has {0} columns and {1} rows'.format(col, row))
 # 2. print top 5 lines
 print(wheatData.head(5))
-df = wheatData.values
+dF = wheatData.values
 
 featureX = 0
 featureY = 3
-data = df[:,[featureX,featureY]]
+data = dF[:,[featureX,featureY]]
 target = 7
 Y = dF[:, target]
-X = np.array(dF[:, [featureA, featureB]])
+X = np.array(dF[:, [featureX, featureY]])
  
 
 
