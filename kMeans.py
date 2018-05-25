@@ -3,6 +3,9 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import scale
 from numpy import float
+import pandas as pd
+import numpy as np
+
 
 
 
