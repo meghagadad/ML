@@ -28,9 +28,10 @@ Y = dF[:, target]
 X = np.array(dF[:, [featureA, featureB]])
  
 
+
 #data = createClusteredData(100, 5)
 
-model = KMeans(n_clusters=3)
+model = KMeans(n_clusters=3,init='random', max_iter=100, n_init=1, verbose=1)
 
 # Note I'm scaling the data to normalize it! Important for good results.
 model = model.fit(scale(data))
@@ -54,4 +55,4 @@ for n, color in enumerate(colors):
     plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
     plt.title('kMeans scatter plot')
     plt.xlabel(str(colnames[featureX]))
-    plt.ylabel(str(colnames[featureY]))
+plt.ylabel(str(colnames[featureY]))
