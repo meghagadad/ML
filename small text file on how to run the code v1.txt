@@ -1,0 +1,19 @@
+kMeans:
+For use of the kMeans product a simple graph was created in order to show the hits as well as a randomly designated of
+25% of the data which would be used to test.
+The coloration in the graph shows the different classes of wheat (red = Kama, blue = Rosa, green = Canadian).
+
+This is currently settled with the base 7 attributes. If more attributes are to be added, line 14 in the code allows 
+more attributes to be added. However: With each given attribute, line 45 (Target) needs to be changed in accordance with an 
+equal amount of new attributes.
+Codeline 17 and 18 (featureX, featureY) can be changed in value (with 0 being the first, 1 being the second and so on) in
+order to align which attributes of the wheat should be put against each other. This can be done freely within the parameters
+of the given attributes.
+
+To add a whole new class of wheat, this requires simply to change line 50 to add more coloration in order to compensate for
+the new class.
+
+This code has been proven to be working in the programs of Spyder, Python (3.6) and PyCharm. 
+
+
+Gaussian Mixture Model:
