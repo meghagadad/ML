@@ -63,7 +63,8 @@ def plot_results(X, Y_, means, covariances, index, title):
 
 
 color_iter = itertools.cycle(['navy', 'turquoise', 'darkorange', 'orange'])
-colors = ['navy', 'turquoise', 'darkorange']
+colors = ['navy', 'turquoise', 'darkorange', 'orange'
+          ]
 # read file
 in_file = 'seeds_dataset.txt'
 colnames = ['area A', 'perimeter P', 'compactness C = 4*pi*A/P^2', 'length of kernel', 'width of kernel',
