@@ -63,7 +63,7 @@ def plot_results(X, Y_, means, covariances, index, title):
 
 
 color_iter = itertools.cycle(['navy', 'turquoise', 'darkorange', 'orange'])
-
+colors = ['navy', 'turquoise', 'darkorange']
 # read file
 in_file = 'seeds_dataset.txt'
 colnames = ['area A', 'perimeter P', 'compactness C = 4*pi*A/P^2', 'length of kernel', 'width of kernel',
@@ -98,7 +98,7 @@ n_classes = 3
 cv_types = ['full','spherical','diag','tied' ]
 
 
-for n, (cv_type, color) in enumerate(zip(cv_types, color_iter)):
+for n, (cv_type, color) in enumerate(zip(cv_types, colors)):
     print('yeah')
     gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type=cv_type).fit(X)
     
@@ -122,8 +122,10 @@ for n, (cv_type, color) in enumerate(zip(cv_types, color_iter)):
     print('The accuracy is:{0}. '.format(round(accuracy,2)))
     plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, n,
              'Gaussian Mixture ' + str(cv_type))
-    data = X[Y == n + 1]
-    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
+    for n, color in enumerate(colors):    
+        data = X[Y == n+1 ]
+        print('data', data, n+1)
+        plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
     
     
     plt.show()
@@ -131,11 +133,11 @@ for n, (cv_type, color) in enumerate(zip(cv_types, color_iter)):
 
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='full').fit(X)
 
-colors = ['red', 'blue', 'green']
+#colors = ['red', 'blue', 'green']
 plot_results(X, gmm.predict(X), gmm.means_, gmm.covariances_, 0,
              'Gaussian Mixture full')
 for n, color in enumerate(colors):
-    data = X[Y == n + 1]
+    data = X[Y == n+1 ]
     plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
 
 gmm = mixture.GaussianMixture(n_components=n_classes, covariance_type='spherical').fit(X)
