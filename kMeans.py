@@ -2,6 +2,7 @@ from numpy import random, array
 import pandas as pd
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.preprocessing import scale
 from numpy import random, float
 from sklearn.model_selection import train_test_split
@@ -12,6 +13,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import random
 
 
+
 random.seed(42)
 
 def softmax(x):
@@ -20,7 +22,7 @@ def softmax(x):
     return e_x / e_x.sum(axis=0) 
 in_file = "Dataset.txt"
 colnames = [ 'area A', 'perimeter P', 'compactness C = 4*pi*A/P^2','length of kernel','width of kernel','asymmetry coefficient', 'length of kernel groove', 'class']
-wheatData = pd.read_csv(in_file,sep='\t', names = colnames);
+wheatData = pd.read_csv(in_file,delim_whitespace =True, names = colnames);
 #[row,col] = wheatData.shape
 #print('Dataset has {0} columns and {1} rows'.format(col, row))
 ## 2. print top 5 lines
@@ -36,11 +38,11 @@ kmeans = KMeans(n_clusters=3,random_state=5)
 featuresX = softmax(df[:,featureX]).reshape(-1, 1)
 print('featuresX',featuresX)
 featuresY = softmax(df[:,featureY]).reshape(-1, 1)
-XtrainSet, XtestSet, YtrainSet, YtestSet = train_test_split(softmax(data[:,0]).reshape(-1, 1), softmax(data[:,1]).reshape(-1, 1),test_size=0.25)
+XtrainSet, XtestSet, YtrainSet, YtestSet = train_test_split(scale(data[:,0]).reshape(-1, 1), scale(data[:,1]).reshape(-1, 1),test_size=0.25)
 
 print('XtrainSet',XtrainSet)
 print('YtrainSet',YtrainSet)
-kmeans.fit(scale(XtrainSet), scale(YtrainSet))
+kmeans.fit(scale(XtrainSet),scale(YtrainSet))
 print('XtestSet',XtestSet)
 print('YtestSet',YtestSet)
 ## make prediction using the testing sets
@@ -48,7 +50,8 @@ Ypred = kmeans.predict(XtestSet).reshape(-1, 1)
 print('Ypred',Ypred)
 #
 ##evaluate the performance of this model on the validation dataset by printing out the result of running classification_report()
-print('Ypred.round()',np.around(Ypred, decimals=1))
+print('YtestSet.round()',YtestSet.round())
+print('Ypred.round()',Ypred.astype(float))
 accuracy = accuracy_score(YtestSet.round(), Ypred, normalize=False)
 evaluation = classification_report(YtestSet.round(), Ypred)
 print('Evaluation:',evaluation)
@@ -59,7 +62,8 @@ print('The accuracy is:{0}. The r2_score is:{1}'.format(round(accuracy,2), round
 
 #kmeans.fit(scale(data))
 labels = kmeans.predict(XtestSet)
-
+evaluation1 = classification_report(YtestSet.round(), Ypred.astype(float))
+print('Evaluation1:',evaluation1)
 #distcance from centroids
 centroids = kmeans.cluster_centers_
 print('centroids',centroids,'labels',labels)
@@ -102,18 +106,24 @@ print('centroids',centroids,'labels',labels)
 #
 #
 ##dict={str(Kama), str(Rosa), str(Canadian)}
-## And we'll visualize it:
-#plt.figure(figsize=(8, 6))
-#plt.scatter(data[:,0], data[:,1], c=model.labels_.astype(float))
-#plt.title('kMeans scatter plot')
+# And we'll visualize it:
+plt.figure(figsize=(8, 6))
+#mask = np.all(np.isnan(Ypred))
+#mask = ma.masked_invalid(Ypred)
+print('data[:,0]',data[:,0], kmeans.labels_.astype(float), 'kmeans.labels_.astype(float).reshape(-1,1)')
+plt.scatter(data[:,0], data[:,1])#, c=kmeans.labels_.astype(float))
+#print('labels[~mask].astype(float)',Ypred[~mask])
+#plt.scatter(data[:,0], data[:,1], c=labels[~mask].astype(float))
+
+plt.title('kMeans scatter plot')
 #plt.legend(scatterpoints = 10, loc ='lower right', prpp = dict(size =3)) # to do legend
-#plt.xlabel(str(colnames[featureX]))
-#plt.ylabel(str(colnames[featureY]))
-#plt.show()
-#colors = ['navy', 'turquoise', 'darkorange']
-#for n, color in enumerate(colors):
-#    data = X[Y == n+1]
-#    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
-#    plt.title('kMeans scatter plot')
-#    plt.xlabel(str(colnames[featureX]))
-#    plt.ylabel(str(colnames[featureY]))
+plt.xlabel(str(colnames[featureX]))
+plt.ylabel(str(colnames[featureY]))
+plt.show()
+colors = ['navy', 'turquoise', 'darkorange']
+for n, color in enumerate(colors):
+    data = X[Y == n+1]
+    plt.scatter(data[:, 0], data[:, 1], marker='x', color=color)
+    plt.title('kMeans scatter plot')
+    plt.xlabel(str(colnames[featureX]))
+    plt.ylabel(str(colnames[featureY]))
