@@ -17,13 +17,17 @@ df = wheatData.values
 featureX = 1
 featureY = 6
 data = df[:,[featureX,featureY]]
+
+X = (np.array(dF[:, [featureA, featureB]]))
+target = 7
+Y = dF[:, target]
 # create a model using KMeans
 kmeans = KMeans(n_clusters=3,random_state=5)
 
 ##split the dataset into training and validation sets using train test split()
 featuresX = scale(df[:,featureX]).reshape(-1, 1)
 featuresY = scale(df[:,featureY]).reshape(-1, 1)
-XtrainSet, XtestSet, YtrainSet, YtestSet = train_test_split(featuresX, featuresY,test_size=0.25)
+XtrainSet, XtestSet, YtrainSet, YtestSet = train_test_split(df, Y,test_size=0.25)
 
 #train model
 kmeans.fit(XtrainSet,YtrainSet)
