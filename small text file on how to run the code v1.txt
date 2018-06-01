@@ -1,10 +1,12 @@
-kMeans:
+k-Means:
+
 For use of the kMeans product a simple graph was created in order to show the hits as well as a randomly designated of
 25% of the data which would be used to test.
 The coloration in the graph shows the different classes of wheat (red = Kama, blue = Rosa, green = Canadian).
 
 This is currently settled with the base 7 attributes. If more attributes are to be added, line 14 in the code allows 
 more attributes to be added (colnames). However: with each given attribute, line 22 (Target) needs to be changed in accordance with an equal amount of new attributes.
+
 Codeline 17 and 18 (featureX, featureY) can be changed in value (with 0 being the first, 1 being the second and so on) in
 order to align which attributes of the wheat should be put against each other. This can be done freely within the parameters
 of the given attributes.
@@ -16,3 +18,16 @@ This code has been proven to be working in the programs of Spyder, Python (3.6) 
 
 
 Gaussian Mixture Model:
+
+For 2d plotter for Gaussain Mixture model we used 75% of the data as train,25% as test.
+The coloration in the graph shows the different classes of wheat (random colors are generated in order to differentiate between the diffrent classes).
+
+'seeds_dataset.txt' has total 7 attributes(columns are indexed starting from 0 and each columns have diffrent names).If more attributes are to be added, line 64 in the code allows us to dd more attributes in the field(colnames).To specify new target, line 72 (Target) needs to be changed in accordance with an equal amount of new attributes.Currently we specified target as column[7] which is named as'class'.
+
+Codeline 70 and 71 (featureA, featureB) can be changed in value (with 0 being the first, 1 being the second and so on) in
+order to align which attributes of the 'seeds_dataset.txt' should be put against each other. This can be done freely within the parameters
+of the given attributes.
+
+This code has been proven to be working in the programs of Spyder, Python (3.6) and PyCharm. 
+
+
